@@ -1,0 +1,19 @@
+Query:
+  type: object
+  config:
+    description: "Apartments ORM repository"
+    fields:
+      product:
+        type: "Product"
+        args:
+          id:
+            type: "Int"
+            description: "product id"
+        resolve: "@=resolver('Product', [args])"
+      product_collection:
+        type: "ProductCollection"
+        args:
+          limit:
+            type: "Int"
+            description: "product limit"
+        resolve: "@=resolver('ProductCollection', [args])"

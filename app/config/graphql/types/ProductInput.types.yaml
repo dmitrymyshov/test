@@ -1,0 +1,7 @@
+ProductInput:
+  type: input-object
+  config:
+    fields:
+      name:
+        type: "String!"
+        description: "user name"

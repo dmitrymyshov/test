@@ -1,0 +1,7 @@
+UserCollection:
+  type: object
+  config:
+    description: "User collection"
+    fields:
+      users:
+        type: "[User]"

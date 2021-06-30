@@ -1,0 +1,11 @@
+User:
+  type: object
+  config:
+    description: "An apartment"
+    fields:
+      id:
+        type: "Int!"
+        description: "The unique ID of the apartment."
+      name:
+        type: "String!"
+        description: "The unique user name"

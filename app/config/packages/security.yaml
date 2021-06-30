@@ -1,0 +1,69 @@
+security:
+    # https://symfony.com/doc/current/security/experimental_authenticators.html
+    enable_authenticator_manager: false
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+        api_user_provider:
+            entity:
+                class: App\Entity\User
+                property: apiToken
+        oauth_hwi:
+            id: hwi_oauth.user.provider
+    password_hashers:
+        # use your user class name here
+        App\Entity\User:
+            # Use native password hasher, which auto-selects the best
+            # possible hashing algorithm (starting from Symfony 5.3 this is "bcrypt")
+            algorithm: auto
+
+    firewalls:
+        api:
+            pattern: ^/api/
+            guard:
+                authenticators:
+                    - App\Security\ApiTokenAuthenticator
+            provider: api_user_provider
+        main:
+            anonymous: ~
+            lazy: true
+            provider: oauth_hwi
+            oauth:
+                resource_owners:
+                    auth0: "/auth0/callback"
+                login_path: /
+                failure_path: /
+                default_target_path: /
+                oauth_user_provider:
+                    service: hwi_oauth.user.provider
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+#                entry_point: App\Security\LoginFormAuthenticator
+            logout:
+                path: app_logout
+                target: /
+                # where to redirect after logout
+                # target: app_any_route
+
+            remember_me:
+                name: SECURITY_DEMO
+                secret: '%kernel.secret%'
+                lifetime: 60400
+                always_remember_me: true
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
